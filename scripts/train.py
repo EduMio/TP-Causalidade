@@ -9,7 +9,7 @@ import utils
 # Hyperparameters
 
 n_epochs = 50
-batch_size = 2000
+batch_size = 1500
 
 n_attributes = 146
 n_targets = 129
@@ -33,7 +33,8 @@ model.to(device)
 start_training = time.time()
 for epoch in range(n_epochs):
     start_epoch = time.time()
-    
+    if epoch%5 == 0 and epoch > 0:
+        utils.save_model(model,path = "../data/models/lin_5_layers/linear_5_scalating_epoch_"+str(epoch)+".pth")
     for i in range(0,len(X),batch_size):
         
         x = X[i:i+batch_size]
@@ -54,4 +55,4 @@ time_training = (time.time() - start_training)/3600
 print("Time spent (Hours): "+str(time_training),"Avg time spent per epoch (Minutes) : "+str(60*time_training/n_epochs),"Final Loss: "+str(loss.to("cpu").detach().numpy()),sep="\n")
 
 
-utils.save_model(model,path = "../data/models/linear_5_scalating.pth")
+utils.save_model(model,path = "../data/models/lin_5_layers/linear_5_scalating.pth")
