@@ -26,7 +26,6 @@ if not os.path.exists(PATH):
     print('Concatenando todos os dados de treino')
     if not os.path.exists(DIR):
         os.makedirs(DIR)
-    v = np.array([])
     def getV(i):
         return np.load('../preprocess/preprocessed' + str(i) + '.npy')
     v = getV(0)
