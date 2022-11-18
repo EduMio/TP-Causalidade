@@ -2,11 +2,13 @@ import numpy as np
 import torch
 import torch.nn as nn
 import time
+
 import linear_model
+import utils
 
 # Hyperparameters
 
-n_epochs = 20
+n_epochs = 2
 batch_size = 2000
 
 n_attributes = 146
@@ -16,15 +18,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 #Loading the data
 
-db = np.load("../data/db.npy")
-
-X = (db.T[:n_attributes]).T
-Y = (db.T[n_attributes:]).T
-
-del(db)
-
-X,Y = torch.tensor(X).float(),torch.tensor(Y).float()
-X,Y = X.to(device),Y.to(device)
+X_train, Y_train, X_test, Y_test = utils.get_data(path = "../data/training/db.npy",device = device,split_train_test = 1,n_attributes = n_attributes)
 
 
 # Declaring the model,criterion and optmizer
@@ -48,3 +42,5 @@ for epoch in range(n_epochs):
         model.optimizer.step()
         
     print(loss.to("cpu").detach().numpy())
+
+utils.save_model(model,path = "../data/models/linear1.pth")
