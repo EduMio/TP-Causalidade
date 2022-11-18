@@ -8,7 +8,7 @@ import utils
 
 # Hyperparameters
 
-n_epochs = 50
+n_epochs = 40 # Total = 50
 batch_size = 1500
 
 n_attributes = 146
@@ -24,7 +24,7 @@ X,Y = utils.get_data(path = "../data/training/db.npy",device = device,split_trai
 
 # Declaring the model,criterion and optmizer
 
-model = linear_model.LinearModel()
+model = load_model(linear_model.LinearModel(),"../data/models/lin_5_layers/linear_5_scalating_epoch_10.pth")
 model.to(device)
 
 #Training
