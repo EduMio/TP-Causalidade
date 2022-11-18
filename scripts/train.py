@@ -4,7 +4,7 @@ import torch.nn as nn
 import time
 
 import linear_model
-import utils
+import utils, os
 
 # Hyperparameters
 
@@ -20,7 +20,21 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 #X_train, Y_train, X_test, Y_test = utils.get_data(path = "../data/training/db.npy",device = device,split_train_validation = 1,n_attributes = n_attributes)
 
-X,Y = utils.get_data(path = "../data/training/db.npy",device = device,split_train_validation = 0,n_attributes = n_attributes)
+DIR = '../data/training/'
+PATH = DIR + 'db.npy'
+if not os.path.exists(PATH):
+    print('Concatenando todos os dados de treino')
+    if not os.path.exists(DIR):
+        os.makedirs(DIR)
+    def getV(i):
+        return np.load('../preprocess/preprocessed' + str(i) + '.npy')
+    v = getV(0)
+    for i in range(1, 18):
+        aux = getV(i)
+        v = np.concatenate((v, aux))
+    np.save(PATH, v)
+
+X,Y = utils.get_data(path = PATH,device = device,split_train_validation = 0,n_attributes = n_attributes)
 
 # Declaring the model,criterion and optmizer
 
