@@ -150,3 +150,6 @@ data/
 logs/
 .env
 .autoenv
+
+# arquivos dos datasets originais muito pesados para o github, baixe você mesmo dos links nos READMEs
+*.hdf5
