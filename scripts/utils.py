@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 
 def save_model(model,path):
-    torch.save(model.state_dict(), PATH)
+    torch.save(model.state_dict(), path)
 
 def load_model(model_class):
     model = model_class(*args, **kwargs)
@@ -11,7 +11,7 @@ def load_model(model_class):
 
     return model
 
-def get_data(path,device,split_train_test,n_attributes,train_fraction = 0.8):
+def get_data(path,device,split_train_validation,n_attributes,train_fraction = 0.8):
     
     db = np.load(path)
     
@@ -20,7 +20,7 @@ def get_data(path,device,split_train_test,n_attributes,train_fraction = 0.8):
 
     del(db)
     
-    if split_train_test:
+    if split_train_validation:
         split = np.random.choice(range(X.shape[0]), int(train_fraction*X.shape[0]))
 
         X_train = X[split]
@@ -28,7 +28,7 @@ def get_data(path,device,split_train_test,n_attributes,train_fraction = 0.8):
         X_test =  X[~split]
         Y_test = Y[~split]
         
-        X_train, Y_train, X_test, Y_test = torch.tensor(X_train),torch.tensor(Y_train),torch.tensor(X_test),torch.tensor(Y_test)
+        X_train, Y_train, X_test, Y_test = torch.tensor(X_train).float(),torch.tensor(Y_train).float(),torch.tensor(X_test).float(),torch.tensor(Y_test).float()
         
         X_train, Y_train, X_test, Y_test = X_train.to(device), Y_train.to(device), X_test.to(device), Y_test.to(device)
         

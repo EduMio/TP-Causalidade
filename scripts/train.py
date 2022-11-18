@@ -8,7 +8,7 @@ import utils
 
 # Hyperparameters
 
-n_epochs = 2
+n_epochs = 50
 batch_size = 2000
 
 n_attributes = 146
@@ -18,8 +18,9 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 #Loading the data
 
-X_train, Y_train, X_test, Y_test = utils.get_data(path = "../data/training/db.npy",device = device,split_train_test = 1,n_attributes = n_attributes)
+#X_train, Y_train, X_test, Y_test = utils.get_data(path = "../data/training/db.npy",device = device,split_train_validation = 1,n_attributes = n_attributes)
 
+X,Y = utils.get_data(path = "../data/training/db.npy",device = device,split_train_validation = 0,n_attributes = n_attributes)
 
 # Declaring the model,criterion and optmizer
 
@@ -28,19 +29,29 @@ model.to(device)
 
 #Training
 
+
+start_training = time.time()
 for epoch in range(n_epochs):
-    print(epoch)
+    start_epoch = time.time()
+    
     for i in range(0,len(X),batch_size):
         
-        x_train = X[i:i+batch_size]
-        y_train = Y[i:i+batch_size]
+        x = X[i:i+batch_size]
+        y = Y[i:i+batch_size]
         
         model.optimizer.zero_grad()
-        y_pred = model(x_train)
-        loss = model.criterion(y_pred, y_train)
+        y_pred = model(x)
+        loss = model.criterion(y_pred, y)
         loss.backward()
         model.optimizer.step()
-        
-    print(loss.to("cpu").detach().numpy())
+    
+    time_epoch = (time.time() - start_epoch)/60
+    
+    print("Epoch: "+str(epoch),"Time spent (Minutes): "+str(time_epoch),"Loss: "+str(loss.to("cpu").detach().numpy()),sep="\n")
+    print("--------------------------------------------------------------------\n")
+    
+time_training = (time.time() - start_training)/3600
+print("Time spent (Hours): "+str(time_training),"Avg time spent per epoch (Minutes) : "+str(60*time_training/n_epochs),"Final Loss: "+str(loss.to("cpu").detach().numpy()),sep="\n")
 
-utils.save_model(model,path = "../data/models/linear1.pth")
+
+utils.save_model(model,path = "../data/models/linear_5_scalating.pth")

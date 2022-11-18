@@ -9,7 +9,7 @@ class LinearModel(nn.Module):
         
         self.n_attributes = 146
         self.n_targets = 129
-        self.n_scalating = 1
+        self.n_scalating = 5
         self.scalating_constant = 2 # Keep this a integer, float values can get things unstable
         self.n_linears_layers = 2*self.n_scalating+3 # MUST be equal to 2*n_scalating + 3 in this implementation: 
         #1 starting layer, n_scalating layers that the number of nodes increase, 1 intermediate layer, 
