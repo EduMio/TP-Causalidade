@@ -84,12 +84,12 @@ def GetEachWaveCoefficients(x, seg):
 	'''
 	ret = np.zeros(TOT+2)
 	s = 0
-	beg = seg[0]
+	mean = np.mean(x[seg[0]:seg[-1]])
 	def saveWaveAndLen(a, b, newLen):
 		nonlocal ret, s
 		a, b = seg[a], seg[b]
 		ret[s] = b-a
-		w = x[a:b]
+		w = x[a:b] - mean
 		interpW = GetInterpolatedWave(w, newLen)
 		c = rfft(interpW)
 		l = len(c)

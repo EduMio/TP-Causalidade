@@ -1,8 +1,8 @@
 from rebuild import*
 
-db = np.load('preprocessed0.npy')
+db = np.load('test.npy')
 print(db.shape)
-idx = 453
+idx = 0
 x = db[idx]
 print('age', x[0])
 print('labels', x[1:7])
