@@ -82,7 +82,7 @@ def GetEachWaveCoefficients(x, seg):
 	retorna um vetor de TOT elementos na ordem (P, QRS, T, completa)
 	[len(P), coeficientes de P, len(QRS), coeficientes de QRS, len(T), coef T, len(ALL), coeff ALL]
 	'''
-	ret = np.zeros(TOT)
+	ret = np.zeros(TOT+2)
 	s = 0
 	beg = seg[0]
 	def saveWaveAndLen(a, b, newLen):
@@ -99,4 +99,6 @@ def GetEachWaveCoefficients(x, seg):
 	for i, l in zip(range(3), [L_P, L_QRS, L_T]):
 		saveWaveAndLen(i*2, i*2+1, l)
 	saveWaveAndLen(0, 5, L_All)
+	ret[s] = seg[2]-seg[1]
+	ret[s+1] = seg[4]-seg[3]
 	return ret
