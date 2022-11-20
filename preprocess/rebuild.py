@@ -1,5 +1,13 @@
 from common import*
 
+def RebuildWave(c):
+	t = c[1:]
+	v = np.zeros(len(c)//2, dtype=complex)
+	v.real = t[::2]
+	v.imag = t[1::2]
+	orgNumSamples = int(c[0])
+	return GetInterpolatedWave(irfft(v), orgNumSamples)
+
 def RebuildWaves(c):
 	'''
 	Reconstrói as ondas P, QRS, T, Completa
@@ -10,13 +18,8 @@ def RebuildWaves(c):
 	s = 0
 	def rebuild(i):
 		nonlocal ret, s
-		t = c[s+1:s+1+i]
-		v = np.zeros(i//2, dtype=complex)
-		v.real = t[::2]
-		v.imag = t[1::2]
-		orgNumSamples = int(c[s])
-		ret.append(GetInterpolatedWave(irfft(v), orgNumSamples))
-		s += 1 + i
+		ret.append(RebuildWave(c[s:s+1+i]))
+		s += 1+i
 	for i in [tP, tQRS, tT, tAll]:
 		rebuild(i)
 	return ret
