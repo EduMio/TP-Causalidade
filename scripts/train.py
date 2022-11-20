@@ -8,7 +8,7 @@ import utils, os
 
 # Hyperparameters
 
-n_epochs = 40 # Total = 50
+n_epochs = 50 # Total = 50
 batch_size = 1500
 
 n_attributes = 146
@@ -38,14 +38,18 @@ X,Y = utils.get_data(path = PATH,device = device,split_train_validation = 0,n_at
 
 # Declaring the model,criterion and optmizer
 
-model = load_model(linear_model.LinearModel(),"../data/models/lin_5_layers/linear_5_scalating_epoch_10.pth")
+#model = utils.load_model(linear_model.LinearModel(),"../data/models/lin_5_layers/linear_5_scalating_epoch_10.pth")
+model = linear_model.LinearModel()
+model.load_state_dict(torch.load("../data/models/lin_5_layers/linear_5_scalating_epoch_15.pth"))
+model.eval()
+print("model loaded")
 model.to(device)
 
 #Training
 
 
 start_training = time.time()
-for epoch in range(n_epochs):
+for epoch in range(20,n_epochs): #Training interrupted in  epoch 20
     start_epoch = time.time()
     if epoch%5 == 0 and epoch > 0:
         utils.save_model(model,path = "../data/models/lin_5_layers/linear_5_scalating_epoch_"+str(epoch)+".pth")
