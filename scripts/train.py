@@ -3,18 +3,24 @@ import torch
 import torch.nn as nn
 import time
 
+# Time Series Transformer
+# ResNets
+
 import linear_model
+from rnn import RNN
 import utils, os
 
 # Hyperparameters
 
-n_epochs = 50 # Total = 50
-batch_size = 1500
+n_epochs = 100 # Total = 100
+batch_size = 300
 
 n_attributes = 146
 n_targets = 129
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+load_model = 0
 
 #Loading the data
 
@@ -38,21 +44,25 @@ X,Y = utils.get_data(path = PATH,device = device,split_train_validation = 0,n_at
 
 # Declaring the model,criterion and optmizer
 
-#model = utils.load_model(linear_model.LinearModel(),"../data/models/lin_5_layers/linear_5_scalating_epoch_10.pth")
-model = linear_model.LinearModel()
-model.load_state_dict(torch.load("../data/models/lin_5_layers/linear_5_scalating_epoch_15.pth"))
-model.eval()
-print("model loaded")
-model.to(device)
+if load_model:
+    model = RNN()
+    model.load_state_dict(torch.load("../data/models/rnn/rnn_1_epoch50.pth"))
+    model.eval()
+    model.to(device)
+    print("model loaded")
+else:
+    model = RNN()
+    model.to(device)
+    print("model loaded")
+    
 
 #Training
 
-
 start_training = time.time()
-for epoch in range(20,n_epochs): #Training interrupted in  epoch 20
+for epoch in range(50,n_epochs): #Training interrupted in  epoch 20
     start_epoch = time.time()
-    if epoch%5 == 0 and epoch > 0:
-        utils.save_model(model,path = "../data/models/lin_5_layers/linear_5_scalating_epoch_"+str(epoch)+".pth")
+    if epoch%5 == 0 and epoch > 50:
+        utils.save_model(model,path = "../data/models/rnn/rnn_1_epoch"+str(epoch)+".pth")
     for i in range(0,len(X),batch_size):
         
         x = X[i:i+batch_size]
@@ -73,4 +83,4 @@ time_training = (time.time() - start_training)/3600
 print("Time spent (Hours): "+str(time_training),"Avg time spent per epoch (Minutes) : "+str(60*time_training/n_epochs),"Final Loss: "+str(loss.to("cpu").detach().numpy()),sep="\n")
 
 
-utils.save_model(model,path = "../data/models/lin_5_layers/linear_5_scalating.pth")
+utils.save_model(model,path = "../data/models/rnn/rnn_1.pth")
