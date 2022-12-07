@@ -80,7 +80,7 @@ def GetEachWaveCoefficients(x, seg):
 	x : ecg inteiro
 	seg : lista de 7 elementos, contendo a segmentação de uma onda no ecg
 	retorna um vetor de TOT elementos na ordem (P, QRS, T, completa)
-	[len(P), coeficientes de P, len(QRS), coeficientes de QRS, len(T), coef T, len(ALL), coeff ALL]
+	[len(P), coeficientes de P, len(QRS), coeficientes de QRS, len(T), coef T, len(ALL), coeff ALL, len(PQ), len(ST)]
 	'''
 	ret = np.zeros(TOT+2)
 	s = 0

@@ -1,4 +1,6 @@
-TRAIN_DIR = 'TrainData'
+import os
+
+TRAIN_DIR = '..' + os.sep + 'data' + os.sep + 'TrainData'
 IDADES_DIR = 'idades'
 PREPROCESSED_DATA = 'PreprocessedTrain'
 ELETRODO_IDX = 0
@@ -10,7 +12,7 @@ TOT_BINS = MAX_AGE - MIN_AGE + 1
 N_COEFF = N_COEFF_CMPLX * 2
 INTERP_LEN = 127
 
-import numpy as np, h5py, neurokit2 as nk, warnings, time, os, pandas as pd, math
+import numpy as np, h5py, neurokit2 as nk, warnings, time, pandas as pd, math
 from scipy.fft import rfft
 
 def TryMkDirs(d):
@@ -48,3 +50,9 @@ def GetCoeff(w):
 	ret[1::2] = c.real
 	ret[2::2] = c.imag
 	return ret
+
+def FilterNeurokitWarnings():
+	# filter some (bugs?) from neurokit2
+	warnings.filterwarnings(action='ignore', message='Mean of empty slice')
+	warnings.filterwarnings(action='ignore', message='invalid value encountered in double_scalars')
+	warnings.filterwarnings(action='ignore', message='Too few peaks detected to compute the rate. Returning empty vector.')

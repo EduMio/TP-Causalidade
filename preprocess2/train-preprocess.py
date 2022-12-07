@@ -31,20 +31,27 @@ examsIds = examsIds[:-1]
 df = pd.read_csv(TRAIN_DIR + os.sep + 'exams.csv')
 df = df[df['trace_file'] == p]
 
-def GetAgeFromRow(i):
+def GetDFRow(i):
 	examId = examsIds[i]
-	row = df[df['exam_id'] == examId]
-	return row['age'].values[0]
+	return df[df['exam_id'] == examId]
+
+def GetRowValue(row, key):
+	return row[key].values[0]
+
+def GetLabelsFromRow(row):
+	LABELS = ['1dAVb', 'RBBB', 'LBBB', 'SB' , 'ST', 'AF']
+	return np.array([GetRowValue(row, label) for label in LABELS])
 
 ecgs = [[] for _ in range(TOT_BINS)]
 ondas = [[] for _ in range(TOT_BINS)]
-mappings = [[] for _ in range(TOT_BINS)]
+mappings = [[] for _ in range(TOT_BINS)] # mapeia a onda para o ecg de que foi retirado
+labels = [[] for _ in range(TOT_BINS)]
 
 nPessoas = len(M)
 for i in range(nPessoas):
 	
 	if i % 50 == 0:
-		print(i, '/', nPessoas)
+		print(i, '/', nPessoas)	
 		
 	ecg = M[i, :, ELETRODO_IDX]
 	
@@ -59,7 +66,10 @@ for i in range(nPessoas):
 	w = ecg - ecg.mean()
 	d = TryDelineate(w)
 	if d is not None:
-		age = GetAgeFromRow(i)
+
+		row = GetDFRow(i)
+		age = GetRowValue(row, 'age')
+
 		off = MapAgeToBin(age)
 		starts = d['ECG_P_Onsets']
 		found = False
@@ -83,6 +93,7 @@ for i in range(nPessoas):
 			found = True
 		if found:
 			ecgs[off].append(ecg)
+			labels[off].append(GetLabelsFromRow(row))
 
 def ToNP(x):
 	return [np.array(i) for i in x]
@@ -94,5 +105,6 @@ for i in range(TOT_BINS):
 	np.save(start + 'ecgs', ecgs[i])
 	np.save(start + 'mappings', mappings[i])
 	np.save(start + 'ondas', ondas[i])
+	np.save(start + 'labels', labels[i])
 
 print('Took', time.time() - t0, 'seconds')
