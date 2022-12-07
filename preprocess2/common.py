@@ -1,7 +1,6 @@
 import os
 
 TRAIN_DIR = '..' + os.sep + 'data' + os.sep + 'TrainData'
-IDADES_DIR = 'idades'
 PREPROCESSED_DATA = 'PreprocessedTrain'
 ELETRODO_IDX = 0
 SAMPLE_RATE = 400
