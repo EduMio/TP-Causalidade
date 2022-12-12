@@ -1,6 +1,6 @@
 from common import*
 
-TRAIN_DIR = 'TrainData'
+TRAIN_DIR = '../data/TrainData'
 def Preprocess(fileInt, eletrodoIdx):
 	'''
 	dado o caminho do arquivo exams.csv, do .hdf5, o eletrodoIdx, computa o vetor
@@ -27,6 +27,7 @@ def Preprocess(fileInt, eletrodoIdx):
 	s.update(healthy.exam_id.values)
 	
 	ret = []
+	mappings = []
 	nPessoas = len(M)
 	for i in range(nPessoas):
 		examId = examsIds[i]
@@ -52,12 +53,12 @@ def Preprocess(fileInt, eletrodoIdx):
 					]
 					tot[7:] = coeff
 					ret.append(tot)
+					mappings.append(i)
 			except Exception as e:
 				print(e, i)
 		if i % 100 == 0:
 			print(i, '/', nPessoas)
-	ret = np.array(ret)
-	return ret
+	return np.array(ret), np.array(mappings)
 
 l = sys.argv
 if len(l) < 2:
@@ -65,7 +66,8 @@ if len(l) < 2:
 else:
 	t0 = time.time()
 	fileInt = int(l[1])
-	c = Preprocess(fileInt, 0)
+	a, b = Preprocess(fileInt, 0)
 	now = time.time()
-	np.save('preprocessed' + str(fileInt), c)
+	np.save('p' + str(fileInt), a)
+	np.save('m' + str(fileInt), a)
 	print('Took', now-t0)
