@@ -1,7 +1,7 @@
 from common import*
 
-BEG = 'TestData' + os.sep
-dfLabels = pd.read_csv(BEG + 'gold_standard.csv')
+BEG = '../data/TestData/'
+dfLabels = pd.read_csv(BEG + 'annotations/gold_standard.csv')
 dfAgeSex = pd.read_csv(BEG + 'attributes.csv')
 
 with h5py.File(BEG + 'ecg_tracings.hdf5') as f:
