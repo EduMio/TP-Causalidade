@@ -14,7 +14,6 @@ class RNN(nn.Module):
         self.criterion = nn.MSELoss()
         self.optimizer = torch.optim.Adam(self.parameters())
 
-        
     def forward(self, x):
         
         [x,hn] = self.rnn(x)
